@@ -72,10 +72,11 @@ func processUpdate(upd *response.TgUpdate) {
 		if nil != prevMessage {
 			var currentDate = time.Now().Unix()
 			var prevDate = prevMessage.CreatedAt.Unix()
-			var diffSeconds = currentDate - prevDate
-			var diffMinutes = diffSeconds / 60
-			var diffHours = diffMinutes / 60
-			var diffDays = diffHours / 24
+			var diffSecondsTotal = (currentDate - prevDate)
+			var diffDays = diffSecondsTotal / 60 / 60 / 24
+			var diffHours = (diffSecondsTotal / 60 / 60) % 24
+			var diffMinutes = (diffSecondsTotal / 60) % 60
+			var diffSeconds = diffSecondsTotal % 60
 
 			requestPayload := payload.TgPlSendMessage{
 				ChatId:    origChat.Id,
@@ -83,9 +84,9 @@ func processUpdate(upd *response.TgUpdate) {
 			}
 
 			requestPayload.Text = fmt.Sprintf(
-				"%d days without anus mentioning (%d hours/%d minutes/%d seconds)",
-				uint64(diffHours),
+				"%d days %d hours %d minutes %d seconds without anus mentioning",
 				uint64(diffDays),
+				uint64(diffHours),
 				uint64(diffMinutes),
 				uint64(diffSeconds),
 			)
