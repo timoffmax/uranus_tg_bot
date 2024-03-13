@@ -7,8 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetPreviousAnusMessage() *entity.AnusMessage {
-	result := &entity.AnusMessage{}
+func GetPreviousAnusMessage(chatId string) *entity.AnusMessage {
+	result := &entity.AnusMessage{ChatId: chatId}
 
 	conn := database.DbConnection
 	qr := conn.Last(&result)

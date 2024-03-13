@@ -9,6 +9,7 @@ import (
 	"github.com/timoffmax/vocabulary-bot/model/api/response"
 	"github.com/timoffmax/vocabulary-bot/model/api/response/utils"
 	"github.com/timoffmax/vocabulary-bot/service/db"
+	"strconv"
 	"time"
 )
 
@@ -67,7 +68,7 @@ func processUpdate(upd *response.TgUpdate) {
 	}
 
 	if utils.IsAnusMessage(&origMessage) {
-		var prevMessage = db.GetPreviousAnusMessage()
+		var prevMessage = db.GetPreviousAnusMessage(strconv.FormatInt(origChat.Id, 10))
 
 		if nil != prevMessage {
 			var currentDate = time.Now().Unix()
@@ -104,7 +105,9 @@ func processUpdate(upd *response.TgUpdate) {
 
 		anusMessage := entity.AnusMessage{
 			MessageId: uint(origMessage.MessageId),
+			ChatId:    strconv.FormatInt(origChat.Id, 10),
 		}
+
 		db.CreateAnusMessage(&anusMessage)
 	}
 }
